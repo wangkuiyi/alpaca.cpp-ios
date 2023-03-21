@@ -126,3 +126,16 @@ target_link_libraries(ggml PRIVATE ${LLAMA_EXTRA_LIBS})
 target_include_directories(ggml PUBLIC .)
 target_link_libraries(quantize PRIVATE ggml)
 target_link_libraries(chat PRIVATE ggml)
+
+add_library(alpacacpp ggml.c ggml.h utils.cpp utils.h chat.cpp)
+target_compile_features(alpacacpp PUBLIC cxx_std_11)
+target_include_directories(alpacacpp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+if(APPLE)
+  set_target_properties(alpacacpp PROPERTIES
+    FRAMEWORK TRUE
+    FRAMEWORK_VERSION A
+    MACOSX_FRAMEWORK_IDENTIFIER wang.yi.alpacacpp
+    PUBLIC_HEADER "ggml.h utils.h"
+  )
+endif()
